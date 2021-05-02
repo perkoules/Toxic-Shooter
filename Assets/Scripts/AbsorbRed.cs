@@ -5,14 +5,18 @@ using UnityEngine;
 public class AbsorbRed : MonoBehaviour
 {
     public Player player;
+    private bool isIn = false;
     private void OnTriggerStay2D(Collider2D other)
     {
         if (other.CompareTag("Red"))
         {
-            if (Input.GetMouseButtonDown(1))
-            {
-                player.RedAbsorbed(other.gameObject);
-            }
+            isIn = true;
+            player.IsInsideRed(isIn, other.gameObject);
+        }
+        else
+        {
+            isIn = false;
+            player.IsInsideRed(isIn, other.gameObject);
         }
     }
 }

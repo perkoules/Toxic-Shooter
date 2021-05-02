@@ -21,11 +21,12 @@ public class Player : MonoBehaviour
     public List<GameObject> lives;
     private int currentDamage;
 
+    private bool isInsideGreen, isInsideRed = false;
+    private GameObject greenProjectile, redProjectile;
+
     private void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
-        Cursor.visible = false;
-        Cursor.lockState = CursorLockMode.Confined;
     }
     private void Start()
     {
@@ -47,7 +48,22 @@ public class Player : MonoBehaviour
                 go.GetComponent<PlayerProjectile>().SetDamage(currentDamage);
             }
         }
-       
+        else if (Input.GetMouseButtonDown(1))
+        {
+            if (isInsideGreen)
+            {
+                GreenAbsorbed();
+            }
+            else if (isInsideRed)
+            {
+                RedAbsorbed();
+            }
+            else
+            {
+                isInsideGreen = false;
+                isInsideRed = false;
+            }
+        }
     }
     private void FixedUpdate()
     {
@@ -61,16 +77,29 @@ public class Player : MonoBehaviour
         float angle = Mathf.Atan2(lookDir.y, lookDir.x) * Mathf.Rad2Deg - 90f;
         rb.rotation = angle;
     }
-    public void RedAbsorbed(GameObject redObj)
+
+    public void IsInsideGreen(bool isIn, GameObject go)
     {
-        Destroy(redObj);
+        isInsideGreen = isIn;
+        greenProjectile = go;
+    }
+    public void IsInsideRed(bool isIn, GameObject go)
+    {
+        isInsideRed = isIn;
+        redProjectile = go;
+    }
+    public void RedAbsorbed()
+    {
+        isInsideRed = false;
+        Destroy(redProjectile);
         reds++;
         redsText.text = reds.ToString();
     }
 
-    public void GreenAbsorbed(GameObject greenObj)
+    public void GreenAbsorbed()
     {
-        Destroy(greenObj);
+        isInsideGreen = false;
+        Destroy(greenProjectile);
         greens++;
         GreensText.text = greens.ToString();
     }

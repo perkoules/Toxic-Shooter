@@ -24,16 +24,11 @@ public class Spawner : MonoBehaviour
             Instance = this;
         }
     }
-    void Start()
-    {
-        EnemySpawn();
-    }
-    private void Update()
-    {
 
-    }
     public void EnemySpawn()
     {
+        Cursor.visible = false;
+        Cursor.lockState = CursorLockMode.Confined;
         for (int i = 0; i < enemyWaves[currentWave].amountToSpawn; i++)
         {
             GameObject en = Instantiate(enemyPrefab, enemySpawnPositions[i]);
