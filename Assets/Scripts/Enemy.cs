@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 
 public class Enemy : MonoBehaviour
@@ -12,6 +13,7 @@ public class Enemy : MonoBehaviour
     private Rigidbody2D rb;
     private float fireRate;
 
+    public TextMeshProUGUI enemyHealthText;
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
@@ -32,6 +34,7 @@ public class Enemy : MonoBehaviour
     public void SetUp(EnemySO enemySO)
     {
         health = enemySO.health;
+        enemyHealthText.text = health.ToString();
         enemyDamage = enemySO.enemyProjectileDamage;
         fireRate = enemySO.fireRate;
     }
@@ -54,9 +57,13 @@ public class Enemy : MonoBehaviour
 
     public void DealWithDamage(int damage)
     {
+        int newScore = System.Convert.ToInt32(damage + fireRate * health);
+        Score.Instance.ShowScore(newScore);
         health -= damage;
+        enemyHealthText.text = health.ToString();
         if (health <= 0)
         {
+            Spawner.Instance.CheckAllEnemiesAreDead();
             Destroy(gameObject);
         }
     }

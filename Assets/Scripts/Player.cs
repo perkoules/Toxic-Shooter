@@ -19,7 +19,7 @@ public class Player : MonoBehaviour
     public int health = 100;
     public TextMeshProUGUI redsText, GreensText, healthText;
     public List<GameObject> lives;
-
+    private int currentDamage;
 
     private void Awake()
     {
@@ -27,21 +27,10 @@ public class Player : MonoBehaviour
         Cursor.visible = false;
         Cursor.lockState = CursorLockMode.Confined;
     }
-
-    public void RedAbsorbed(GameObject redObj)
+    private void Start()
     {
-        Destroy(redObj);
-        reds++;
-        redsText.text = reds.ToString();
+        currentDamage = 500;
     }
-
-    public void GreenAbsorbed(GameObject greenObj)
-    {
-        Destroy(greenObj);
-        greens++;
-        GreensText.text = greens.ToString();
-    }
-
     void Update()
     {
         if (Input.GetMouseButtonDown(0))
@@ -55,6 +44,7 @@ public class Player : MonoBehaviour
                 var go = Instantiate(playerProjectilePrefab, barrel.position, barrel.transform.rotation);
                 go.transform.SetParent(null);
                 go.GetComponent<Rigidbody2D>().AddForce(barrel.up * 20f, ForceMode2D.Impulse);
+                go.GetComponent<PlayerProjectile>().SetDamage(currentDamage);
             }
         }
        
@@ -70,6 +60,19 @@ public class Player : MonoBehaviour
         Vector2 lookDir = mousePos - rb.position;
         float angle = Mathf.Atan2(lookDir.y, lookDir.x) * Mathf.Rad2Deg - 90f;
         rb.rotation = angle;
+    }
+    public void RedAbsorbed(GameObject redObj)
+    {
+        Destroy(redObj);
+        reds++;
+        redsText.text = reds.ToString();
+    }
+
+    public void GreenAbsorbed(GameObject greenObj)
+    {
+        Destroy(greenObj);
+        greens++;
+        GreensText.text = greens.ToString();
     }
 
     public void DealWithDamage(int enemyProjectileDamage)
