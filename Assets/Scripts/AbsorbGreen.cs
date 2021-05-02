@@ -9,7 +9,7 @@ public class AbsorbGreen : MonoBehaviour
     {        
         if (other.CompareTag("Green"))
         {
-            if (Input.GetMouseButton(1))
+            if (Input.GetMouseButtonDown(1))
             {
                 player.GreenAbsorbed(other.gameObject);
             }

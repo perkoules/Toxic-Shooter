@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class Spawner : MonoBehaviour
@@ -11,7 +12,7 @@ public class Spawner : MonoBehaviour
     public GameObject enemyPrefab;
     public int currentWave = 0;
 
-    [SerializeField]private List<GameObject> enemiesSpawn;
+    public List<GameObject> enemiesSpawn;
     private void Awake()
     {
         if (Instance != null && Instance != this)
@@ -27,7 +28,10 @@ public class Spawner : MonoBehaviour
     {
         EnemySpawn();
     }
+    private void Update()
+    {
 
+    }
     public void EnemySpawn()
     {
         for (int i = 0; i < enemyWaves[currentWave].amountToSpawn; i++)
@@ -37,15 +41,18 @@ public class Spawner : MonoBehaviour
             enemiesSpawn.Add(en);
         }
     }
+
     public void RemoveEmptyEnemies()
     {
         enemiesSpawn.RemoveAll(obj => obj == null);
-        enemiesSpawn.TrimExcess();
+        //enemiesSpawn.TrimExcess();
     }
-    public void CheckAllEnemiesAreDead()
+    public void CheckAllEnemiesAreDead(GameObject go)
     {
-        RemoveEmptyEnemies();
-        if(enemiesSpawn.Count <= 0)
+        enemiesSpawn.Remove(go);
+        Destroy(go);
+        enemiesSpawn = enemiesSpawn.Where(item => item != null).ToList();
+        if (enemiesSpawn.Count <= 0)
         {
             currentWave++;
             EnemySpawn();

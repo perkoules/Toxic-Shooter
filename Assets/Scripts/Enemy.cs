@@ -7,7 +7,7 @@ public class Enemy : MonoBehaviour
 {
     public float rotattingSpeed = 5f;
     public Transform gunJoint, gun, barrel;
-    public GameObject enemyProjectile, enemyProjectile2;
+    public List<GameObject> enemyProjectiles;
     private GameObject player;
     public int health, enemyDamage;
     private Rigidbody2D rb;
@@ -41,15 +41,7 @@ public class Enemy : MonoBehaviour
 
     private void Fire()
     {
-        GameObject go = null;
-        if (Random.Range(0, 100) > 50)
-        {
-            go = Instantiate(enemyProjectile, barrel.position, barrel.transform.rotation);
-        }
-        else
-        {
-            go = Instantiate(enemyProjectile2, barrel.position, barrel.transform.rotation);
-        }
+        GameObject go = Instantiate(enemyProjectiles[Random.Range(0, 2)], barrel.position, barrel.transform.rotation);
         go.transform.SetParent(null);
         go.GetComponent<Rigidbody2D>().AddForce(barrel.up * 20f, ForceMode2D.Impulse);
         go.GetComponent<EnemyProjectile>().SetDamage(enemyDamage);
@@ -63,8 +55,7 @@ public class Enemy : MonoBehaviour
         enemyHealthText.text = health.ToString();
         if (health <= 0)
         {
-            Spawner.Instance.CheckAllEnemiesAreDead();
-            Destroy(gameObject);
+            Spawner.Instance.CheckAllEnemiesAreDead(this.gameObject);
         }
     }
 }

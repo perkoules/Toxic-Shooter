@@ -29,7 +29,7 @@ public class Player : MonoBehaviour
     }
     private void Start()
     {
-        currentDamage = 500;
+        currentDamage = 50;
     }
     void Update()
     {
