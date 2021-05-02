@@ -11,7 +11,7 @@ public class Spawner : MonoBehaviour
     public List<EnemySO> enemyWaves;
     public GameObject enemyPrefab;
     public int currentWave = 0;
-
+    public GameObject endGamePanel;
     public List<GameObject> enemiesSpawn;
     private void Awake()
     {
@@ -29,19 +29,26 @@ public class Spawner : MonoBehaviour
     {
         Cursor.visible = false;
         Cursor.lockState = CursorLockMode.Confined;
-        for (int i = 0; i < enemyWaves[currentWave].amountToSpawn; i++)
+        if (currentWave < enemyWaves.Count)
         {
-            GameObject en = Instantiate(enemyPrefab, enemySpawnPositions[i]);
-            en.GetComponent<Enemy>().SetUp(enemyWaves[currentWave]);
-            enemiesSpawn.Add(en);
+            for (int i = 0; i < enemyWaves[currentWave].amountToSpawn; i++)
+            {
+                GameObject en = Instantiate(enemyPrefab, enemySpawnPositions[i]);
+                en.GetComponent<Enemy>().SetUp(enemyWaves[currentWave]);
+                enemiesSpawn.Add(en);
+            }
+        }
+        else
+        {
+            EndGame();
         }
     }
 
-    public void RemoveEmptyEnemies()
+    private void EndGame()
     {
-        enemiesSpawn.RemoveAll(obj => obj == null);
-        //enemiesSpawn.TrimExcess();
+        endGamePanel.SetActive(true);
     }
+
     public void CheckAllEnemiesAreDead(GameObject go)
     {
         enemiesSpawn.Remove(go);
